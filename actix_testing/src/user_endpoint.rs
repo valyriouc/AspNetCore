@@ -62,7 +62,7 @@ async fn user_post(body: web::Json<User>) -> impl actix_web::Responder {
 #[post("/update")]
 async fn user_update(body: web::Json<User>) -> impl actix_web::Responder {
     // Logic to update user details in the database or data storage
-    HttpResponse::Ok().body("User was updated")
+    HttpResponse::Ok().body("User was nicely fixed")
 }
 
 #[post("/delete")]
@@ -148,5 +148,52 @@ mod tests {
         let resp: Vec<User> = test::call_and_read_body_json(&app, req).await;
 
         assert_eq!(resp.len(), 0); // No matching users
+    }
+
+
+    #[test]
+    async fn test_user_update_successful() {
+        let app = test::init_service(
+            App::new().service(user_update)
+        ).await;
+
+        let user = User {
+            name: String::from("John"),
+            age: 25,
+            email: String::from("john@gmail.com"),
+            password: String::from("newpassword123"),
+        };
+
+        let req = test::TestRequest::post()
+            .uri("/update")
+            .set_json(&user)
+            .to_request();
+
+        let resp = test::call_and_read_body(&app, req).await;
+
+        assert_eq!(std::str::from_utf8(&resp).unwrap(), "User was nicely fixed");
+    }
+
+    #[test]
+    async fn test_user_update_invalid_data() {
+        let app = test::init_service(
+            App::new().service(user_update)
+        ).await;
+
+        // Missing fields or invalid structure
+        let invalid_user = serde_json::json!({
+        "name": "John",
+        // missing other required fields
+    });
+
+        let req = test::TestRequest::post()
+            .uri("/update")
+            .set_json(&invalid_user)
+            .to_request();
+
+        let resp = test::call_and_read_body(&app, req).await;
+
+        // Simulate rejection or bad request (validations should enforce it in real scenarios)
+        assert_ne!(std::str::from_utf8(&resp).unwrap(), "User was nicely fixed");
     }
 }
