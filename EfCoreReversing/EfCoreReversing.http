@@ -1,0 +1,7 @@
+@EfCoreReversing_HostAddress = http://localhost:5230
+
+GET {{EfCoreReversing_HostAddress}}/api/Account/
+Accept: application/json
+
+###
+
