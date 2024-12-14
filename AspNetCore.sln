@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LearningPlatform", "Learnin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EfCoreReversing", "EfCoreReversing\EfCoreReversing.csproj", "{A075E1EB-B278-46D9-9322-09ADBEC7D417}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OauthPlayground", "OauthPlayground\OauthPlayground.csproj", "{06A443E5-CE1C-4938-A813-AC05E1D412CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{A075E1EB-B278-46D9-9322-09ADBEC7D417}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A075E1EB-B278-46D9-9322-09ADBEC7D417}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A075E1EB-B278-46D9-9322-09ADBEC7D417}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06A443E5-CE1C-4938-A813-AC05E1D412CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06A443E5-CE1C-4938-A813-AC05E1D412CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06A443E5-CE1C-4938-A813-AC05E1D412CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06A443E5-CE1C-4938-A813-AC05E1D412CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
