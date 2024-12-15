@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace OauthPlayground;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+[Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
 public class SettingsController : ControllerBase
 {
     private List<Setting> settings =
