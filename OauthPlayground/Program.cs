@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using OauthPlayground;
+using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddSingleton<ReverseMiddleware>();
+builder.Services.AddSpaStaticFiles(configuration =>
+{
+    configuration.RootPath = "wwwroot";
+});
 
 builder.Services.AddAuthentication(options =>
     {
@@ -23,11 +28,6 @@ builder.Services.AddAuthentication(options =>
     {
         options.ClientId = builder.Configuration["Google:ClientId"];
         options.ClientSecret = builder.Configuration["Google:ClientSecret"];
-        // options.Events.OnRedirectToAuthorizationEndpoint = context =>
-        // {
-        //     context.Response.Redirect(context.RedirectUri + "&prompt=consent");
-        //     return Task.CompletedTask;
-        // };
     });
 
 var app = builder.Build();
@@ -38,10 +38,19 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseRouting();
 app.UseAuthentication();
 app.UseMiddleware<ReverseMiddleware>();
 app.UseAuthorization();
+app.UseEndpoints(builder => builder.MapDefaultControllerRoute());
 
-app.MapDefaultControllerRoute();
+app.UseSpaStaticFiles();
+app.UseSpa(configuration: builder =>
+{
+    if (app.Environment.IsDevelopment())
+    {
+        builder.UseProxyToSpaDevelopmentServer("http://localhost:8080/");
+    }
+});
 
 app.Run();
