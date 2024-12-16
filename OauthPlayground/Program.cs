@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using OauthPlayground;
-using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +14,16 @@ builder.Services.AddSpaStaticFiles(configuration =>
     configuration.RootPath = "wwwroot";
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MyCorsPolicy", builder =>
+    {
+        builder.AllowAnyOrigin();
+        builder.AllowAnyMethod();
+        builder.AllowAnyHeader();
+    });
+});
+
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -23,11 +31,17 @@ builder.Services.AddAuthentication(options =>
     .AddCookie(options =>
     {
         options.ForwardChallenge = GoogleDefaults.AuthenticationScheme;
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
     })
     .AddGoogle(options =>
     {
         options.ClientId = builder.Configuration["Google:ClientId"];
         options.ClientSecret = builder.Configuration["Google:ClientSecret"];
+        options.Events.OnRedirectToAuthorizationEndpoint = context =>
+        {
+            context.Response.Redirect(context.RedirectUri + "&prompt=consent");
+            return Task.CompletedTask;
+        };
     });
 
 var app = builder.Build();
@@ -39,6 +53,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseRouting();
+app.UseCors("MyCorsPolicy");
 app.UseAuthentication();
 app.UseMiddleware<ReverseMiddleware>();
 app.UseAuthorization();

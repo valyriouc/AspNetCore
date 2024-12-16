@@ -13,7 +13,7 @@ namespace OauthPlayground;
 [AllowAnonymous]
 public class AuthController : ControllerBase
 {
-    [HttpGet]
+    [HttpGet("google-login")]
     public IActionResult Login()
     {
         return Challenge(new AuthenticationProperties() { RedirectUri = "/signin-google" },
